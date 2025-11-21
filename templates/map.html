@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+{% block title %}Interactive Map - Dublin Fitness Companion{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="mb-4">Dublin Environmental Monitoring Map</h2>
+        <div id="map" style="height: 600px; width: 100%;"></div>
+        <div id="map-legend" class="mt-3"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+<script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<style>
+    .route-control {
+        background: white;
+        padding: 8px;
+        border-radius: 4px;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+        margin-bottom: 10px;
+    }
+    .route-marker {
+        color: blue;
+        font-size: 24px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+    .start-marker {
+        color: green;
+    }
+    .loading-control {
+        background: white;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+    }
+    .spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 3px solid rgba(0,0,0,0.2);
+        border-top-color: blue;
+        border-radius: 50%;
+        animation: spin 1s ease-in-out infinite;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+
+<script>
+    // Initialize the map with physical style
+    const map = L.map('map').setView([53.3498, -6.2603], 13);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Layer groups
+    const weatherLayer = L.layerGroup().addTo(map);
+    const userLocationLayer = L.layerGroup().addTo(map);
+    const airLayer = L.layerGroup().addTo(map);  // Add to map by default
+    const noiseLayer = L.layerGroup().addTo(map);
+    const roadNetworkLayer = L.layerGroup().add;
+    let routeLayer = null;
+
+    // Configuration
+    const apiKey = '{{ owm_api_key }}';
+    const monitors = {{ monitors|tojson }};
+
+    // Icons
+    const airIcon = L.icon({
+        iconUrl: 'https://cdn-icons-png.flaticon.com/512/1673/1673221.png',
+        iconSize: [25, 25]
+    });
+    const noiseIcon = L.icon({
+        iconUrl: 'https://cdn-icons-png.flaticon.com/512/2043/2043925.png',
+        iconSize: [25, 25]
+    });
+
+    // Add sensor markers
+    monitors.forEach(monitor => {
+        if (monitor.latitude && monitor.longitude && monitor.serial_number) {
+            const lat = parseFloat(monitor.latitude);
+            const lng = parseFloat(monitor.longitude);
+            
+            if (isNaN(lat) || isNaN(lng)) return;
+
+            const marker = L.marker([lat, lng], {
+                icon: monitor.label.toLowerCase().includes('air') ? airIcon : noiseIcon
+            }).bindPopup('<div class="loading-spinner"></div> Loading data...');
+
+            marker.on('click', async () => {
+                try {
+                    const now = Math.floor(Date.now() / 1000);
+                    const endpoint = monitor.label.toLowerCase().includes('air') 
+                                   ? 'hourly-averages' 
+                                   : 'noise-averages';
+                    
+                    const response = await fetch(`/api/sensor-proxy`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            endpoint: endpoint,
+                            serial: monitor.serial_number,
+                            start: now - 86400,
+                            end: now
+                        })
+                    });
+                    
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+                    
+                    if (!data || data.length === 0) throw new Error('No data available');
+
+                    const latest = data[0]?.laeq || 'N/A';
+                    const average = (data.reduce((a, b) => a + b.laeq, 0) / data.length).toFixed(1);
+
+                    marker.setPopupContent(`
+                        <b>${monitor.label}</b><br>
+                        <div class="sensor-reading">
+                            <span class="value">${latest}</span> 
+                            <span class="unit">${endpoint === 'hourly-averages' ? 'AQI' : 'dB'}</span>
+                        </div>
+                        <small>24h Average: ${average}</small>
+                    `);
+
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    marker.setPopupContent(`Error loading data: ${error.message}`);
+                }
+            });
+
+            (monitor.label.toLowerCase().includes('air') ? airLayer : noiseLayer).addLayer(marker);
+        }
+    });
+
+    // Add distance input and route button
+    const routeControl = L.control({position: 'topleft'});
+    routeControl.onAdd = function() {
+        const div = L.DomUtil.create('div', 'route-control bg-white p-2 rounded');
+        div.innerHTML = `
+            <label>Distance (km):
+                <input type="number" id="distanceInput" min="0.5" max="20" value="2" step="0.5" style="width: 60px">
+            </label>
+            <button id="calculateRouteBtn" class="btn btn-primary btn-sm ml-2">Find Route</button>
+        `;
+        return div;
+    };
+    routeControl.addTo(map);
+
+    // Function to calculate optimal route
+    function calculateOptimalRoute() {
+        // Show loading indicator
+        const loadingControl = L.control({position: 'bottomleft'});
+        loadingControl.onAdd = function() {
+            const div = L.DomUtil.create('div', 'loading-control');
+            div.innerHTML = '<span class="spinner"></span> Calculating route...';
+            return div;
+        };
+        loadingControl.addTo(map);
+        
+        // Get user location or map center
+        const startPoint = userLocationLayer.getLayers().length > 0 
+            ? userLocationLayer.getLayers()[0].getLatLng()
+            : map.getCenter();
+        
+        // Get desired distance
+        const distanceKm = parseFloat(document.getElementById('distanceInput').value) || 2;
+        
+        fetch('/api/calculate-route', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                latitude: startPoint.lat,
+                longitude: startPoint.lng,
+                distance: distanceKm
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to calculate route');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Remove loading indicator
+            map.removeControl(loadingControl);
+            
+            // Clear previous route
+            if (routeLayer) {
+                map.removeLayer(routeLayer);
+            }
+            
+            // Create new route layer
+            routeLayer = L.layerGroup().addTo(map);
+            
+            // Draw route
+            const routePath = L.polyline(data.coordinates, {
+                color: 'blue',
+                weight: 5,
+                opacity: 0.8,
+                lineJoin: 'round'
+            }).addTo(routeLayer);
+            
+            // Add start/end marker
+            L.marker(data.coordinates[0], {
+                icon: L.divIcon({
+                    className: 'route-marker start-marker',
+                    html: '<i class="fas fa-flag"></i>',
+                    iconSize: [25, 25],
+                    iconAnchor: [12, 12]
+                })
+            }).addTo(routeLayer);
+            
+            // Add distance info popup
+            routePath.bindPopup(`
+                <b>Route Details</b><br>
+                Distance: ${data.distance.toFixed(2)} km<br>
+                Start/End: Same point
+            `).openPopup();
+            
+            // Zoom to fit the route
+            map.fitBounds(routePath.getBounds(), {padding: [50, 50]});
+        })
+        .catch(error => {
+            console.error('Route error:', error);
+            map.removeControl(loadingControl);
+            alert('Error calculating route. Please try again.');
+        });
+    }
+
+    // Add event listener to route button
+    document.getElementById('calculateRouteBtn').addEventListener('click', calculateOptimalRoute);
+
+    // User location functions
+    function updateUserPosition(position) {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        
+        userLocationLayer.clearLayers();
+        
+        L.circleMarker([lat, lng], {
+            color: 'blue',
+            fillColor: '#30a5ff',
+            fillOpacity: 0.8,
+            radius: 16,
+            weight: 4
+        }).bindPopup("Your Location").addTo(userLocationLayer);
+    }
+
+    // Geolocation handling
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                const { latitude, longitude } = position.coords;
+                map.setView([latitude, longitude], 13);
+                updateUserPosition(position);
+                addWeatherMarker(latitude, longitude);
+            },
+            () => {
+                addWeatherMarker(53.3498, -6.2603);
+                alert('Geolocation failed, using Dublin center');
+            }
+        );
+    } else {
+        addWeatherMarker(53.3498, -6.2603);
+    }
+
+    // Add route layer to layer control
+    L.control.layers(null, {
+        'Air Quality': airLayer,
+        'Noise Levels': noiseLayer,
+        'Weather': weatherLayer,
+        'Fitness Route': routeLayer
+    }, { collapsed: false }).addTo(map);
+
+    // Update legend
+    
+
+    // Weather function
+    function addWeatherMarker(lat, lon) {
+        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`)
+            .then(response => response.json())
+            .then(data => {
+                weatherLayer.clearLayers();
+                L.marker([lat, lon], {
+                    icon: L.icon({
+                        iconUrl: `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
+                        iconSize: [50, 50]
+                    })
+                }).bindPopup(`
+                    <b>Current Weather</b><br>
+                    ${data.weather[0].main} (${data.weather[0].description})<br>
+                    Temp: ${Math.round(data.main.temp)}°C<br>
+                    Humidity: ${data.main.humidity}%<br>
+                    Wind: ${data.wind.speed} m/s
+                `).addTo(weatherLayer);
+            });
+    }
+    const legend = L.control({ position: 'bottomright' });
+    legend.onAdd = () => {
+        const div = L.DomUtil.create('div', 'legend bg-white p-2 rounded');
+        div.innerHTML = `
+            <h6>Legend</h6>
+            <div><img src="${airIcon.options.iconUrl}" width="20" height="20"> Air Quality</div>
+            <div><img src="${noiseIcon.options.iconUrl}" width="20" height="20"> Noise Level</div>
+            <div><img src="https://openweathermap.org/img/wn/01d@2x.png" width="30" height="30"> Weather</div>
+            <div><svg width="32" height="32"><circle cx="16" cy="16" r="16" fill="#30a5ff" stroke="blue" stroke-width="4"/></svg> Your Location</div>
+            <div><hr style="border-top: 3px solid blue; margin: 5px 0"> Fitness Route</div>
+        `;
+        return div;
+    };
+    legend.addTo(map);
+
+    // Initial setup
+    airLayer.addTo(map);
+    noiseLayer.addTo(map);
+    L.control.layers(
+        null, 
+        {
+            'Air Quality': airLayer,
+            'Noise Levels': noiseLayer,
+            'Weather': weatherLayer,
+            'Fitness Route': routeLayer
+        }, 
+        { collapsed: false }
+    ).addTo(map);
+</script>
+{% endblock %}

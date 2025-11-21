@@ -1,0 +1,394 @@
+[
+    {
+        "serial_number": "10.1.1.1",
+        "label": "Noise 1",
+        "location": "Drumcondra Library",
+        "latitude": "53.369864",
+        "longitude": "-6.258966",
+        "last_calibrated": "2018-08-29"
+    },
+    {
+        "serial_number": "01749",
+        "label": "Noise 2",
+        "location": "Bull Island",
+        "latitude": "53.36866",
+        "longitude": "-6.149316",
+        "last_calibrated": "2023-03-13"
+    },
+    {
+        "serial_number": "10118",
+        "label": "Noise 4",
+        "location": "Ballymun",
+        "latitude": "53.390401",
+        "longitude": "-6.264755",
+        "last_calibrated": "2023-03-01"
+    },
+    {
+        "serial_number": "01548",
+        "label": "Noise 5",
+        "location": "DCC Rowing Club",
+        "latitude": "53.346116",
+        "longitude": "-6.321013",
+        "last_calibrated": "2023-02-21"
+    },
+    {
+        "serial_number": "10.1.1.7",
+        "label": "Noise 7",
+        "location": "Woodstock Gardens",
+        "latitude": "53.323524",
+        "longitude": "-6.247734",
+        "last_calibrated": "2021-01-20"
+    },
+    {
+        "serial_number": "01870",
+        "label": "Noise 8",
+        "location": "Navan Road",
+        "latitude": "53.370758",
+        "longitude": "-6.325578",
+        "last_calibrated": "2023-08-22"
+    },
+    {
+        "serial_number": "10.1.1.11",
+        "label": "Noise 11",
+        "location": "Chancery Park ",
+        "latitude": "53.346694",
+        "longitude": "-6.272244",
+        "last_calibrated": "2021-01-28"
+    },
+    {
+        "serial_number": "10.1.1.12",
+        "label": "Noise 12",
+        "location": "Blessington Basin",
+        "latitude": "53.357153",
+        "longitude": "-6.270895",
+        "last_calibrated": "2021-02-01"
+    },
+    {
+        "serial_number": "01535",
+        "label": "Noise 16",
+        "location": "Blessington Basin Temp replacement",
+        "latitude": "53.357153",
+        "longitude": "-6.270895",
+        "last_calibrated": "2022-03-24"
+    },
+    {
+        "serial_number": "01529",
+        "label": "Noise 18",
+        "location": "Chancery Park Temp Replacement",
+        "latitude": "53.346665",
+        "longitude": "-6.272211",
+        "last_calibrated": "2022-03-21"
+    },
+    {
+        "serial_number": "01530",
+        "label": "Noise 19 Spare",
+        "location": "In Office",
+        "latitude": "",
+        "longitude": "",
+        "last_calibrated": "2022-03-22"
+    },
+    {
+        "serial_number": "01528",
+        "label": "Noise 20",
+        "location": "Drumcondra Temp Replacement",
+        "latitude": "53.369847",
+        "longitude": "-6.258945",
+        "last_calibrated": "2022-03-21"
+    },
+    {
+        "serial_number": "DCC-AQ1",
+        "label": "National Air 1",
+        "location": "Civic Centre",
+        "latitude": "53.3442389",
+        "longitude": "-6.271525",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DCC-AQ2",
+        "label": "National Air 2",
+        "location": "Marino",
+        "latitude": "53.3680667",
+        "longitude": "-6.22785",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DCC-AQ3",
+        "label": "National Air 3",
+        "location": "Phoenix Park",
+        "latitude": "53.3644417",
+        "longitude": "-6.3489667",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DCC-AQ4",
+        "label": "National Air 4",
+        "location": "Finglas",
+        "latitude": "53.390281",
+        "longitude": "-6.305769",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DCC-AQ5",
+        "label": "National Air 5",
+        "location": "Ballyfermot",
+        "latitude": "53.340148",
+        "longitude": "-6.35181",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DCC-AQ6",
+        "label": "National Air 6",
+        "location": "Davitt Road",
+        "latitude": "53.3362889",
+        "longitude": "-6.3090056",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DCC-AQ7",
+        "label": "National Air 7",
+        "location": "Blanchardstown",
+        "latitude": "53.3856444",
+        "longitude": "-6.369925",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DCC-AQ8",
+        "label": "National Air 8",
+        "location": "Dun Laoghaire",
+        "latitude": "53.2857556",
+        "longitude": "-6.1318222",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DCC-AQ9",
+        "label": "National Air 9",
+        "location": "Old Bawn",
+        "latitude": "53.2805333",
+        "longitude": "-6.3560444",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DCC-AQ10",
+        "label": "National Air 10",
+        "location": "St Johns Road West",
+        "latitude": "53.345707",
+        "longitude": "-6.295775",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DM30-00118",
+        "label": "DM30-00118",
+        "location": "Ballymun Library",
+        "latitude": "53.390398",
+        "longitude": "-6.265060",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "TNT1088",
+        "label": "Former Local Air 6",
+        "location": "Formerly Walkinstown Library",
+        "latitude": "53.318902",
+        "longitude": "-6.32176",
+        "last_calibrated": "2019-10-31"
+    },
+    {
+        "serial_number": "TNT1138",
+        "label": "Local Air 2",
+        "location": "Formerly Drumcondra",
+        "latitude": "53.369894",
+        "longitude": "-6.259124",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "TNT1296",
+        "label": "Former Local Air 1",
+        "location": "Formerly Ballymun Library",
+        "latitude": "53.390433",
+        "longitude": "-6.265270",
+        "last_calibrated": "2019-10-31"
+    },
+    {
+        "serial_number": "TNO2161",
+        "label": "Local Air 4",
+        "location": "Custom House Quay",
+        "latitude": "53.347863",
+        "longitude": "-6.243785",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "TNO2162",
+        "label": "Local Air 7",
+        "location": "Coolock",
+        "latitude": "53.390542",
+        "longitude": "-6.202395",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DCC-AQ13",
+        "label": "National Air 13",
+        "location": "Dublin Port",
+        "latitude": "53.351671",
+        "longitude": "-6.203778",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DCC-AQ17",
+        "label": "National Air 17",
+        "location": "Ringsend",
+        "latitude": "53.341938",
+        "longitude": "-6.214116",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DCC-AQ22",
+        "label": "National Air 22",
+        "location": "Rathmines",
+        "latitude": "53.322029",
+        "longitude": "-6.267154",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DCC-AQ52",
+        "label": "National Air 52",
+        "location": "St. Anne's Park, Raheny",
+        "latitude": "53.372904",
+        "longitude": "-6.179390",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DCC-AQ69",
+        "label": "National Air 69",
+        "location": "Pearse Street",
+        "latitude": "53.345053",
+        "longitude": "-6.254344",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "TNO4435",
+        "label": "Local Air 2",
+        "location": "Drumcondra",
+        "latitude": "53.3699",
+        "longitude": "-6.2591",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "TNO4438",
+        "label": "Local Air 11",
+        "location": "Cabra Community College",
+        "latitude": "53.3687022",
+        "longitude": "-6.2943",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "TNO4488",
+        "label": "Local Air 9",
+        "location": "Sandymount Green, Dublin",
+        "latitude": "53.33192",
+        "longitude": "-6.215766",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "TNO4390",
+        "label": "Local Air 10",
+        "location": "TU Dublin - Park House",
+        "latitude": "53.357689",
+        "longitude": "-6.287134",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "TNO4324",
+        "label": "Local Air 5",
+        "location": "Lord Edward Street",
+        "latitude": "53.343628",
+        "longitude": "-6.270197",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "TNO4323",
+        "label": "Local Air 6",
+        "location": "Walkinstown Library",
+        "latitude": "53.318902",
+        "longitude": "-6.32176",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "TNO4325",
+        "label": "Former Local Air 2",
+        "location": "Formerly Drumcondra",
+        "latitude": "53.369894",
+        "longitude": "-6.259124",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "TNO4437",
+        "label": "Local Air 1",
+        "location": "Ballymun Library",
+        "latitude": "53.390433",
+        "longitude": "-6.265270",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "15960",
+        "label": "Local Air 13",
+        "location": "Mountjoy Square",
+        "latitude": "53.356816",
+        "longitude": "-6.256876",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "0110-000180-000000",
+        "label": "Local Air 14",
+        "location": "Kylemore",
+        "latitude": "53.333691",
+        "longitude": "-6.350796",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "0110-000141-000000",
+        "label": "Local Air 8",
+        "location": "Weaver Park",
+        "latitude": "53.337909",
+        "longitude": "-6.281161",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DM30-00530",
+        "label": "Local Air 9",
+        "location": "Sandymount Green",
+        "latitude": "53.33192",
+        "longitude": "-6.215766",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DM30-00531",
+        "label": "Local Air 12",
+        "location": "Donnybrook Fire Station",
+        "latitude": "53.322562",
+        "longitude": "-6.2370145",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DCC-AQ91",
+        "label": "National Air 91",
+        "location": "Amiens Street",
+        "latitude": "53.352372",
+        "longitude": "-6.249015",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "DCC-AQ11",
+        "label": "National Air 11",
+        "location": "Winetavern Street",
+        "latitude": "53.344201",
+        "longitude": "-6.271563",
+        "last_calibrated": null
+    },
+    {
+        "serial_number": "15966",
+        "label": "15966",
+        "location": "Weaver Park",
+        "latitude": "53.337909",
+        "longitude": "-6.281161",
+        "last_calibrated": null
+    }
+]

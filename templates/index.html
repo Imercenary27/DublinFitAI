@@ -1,0 +1,43 @@
+<!-- templates/index.html -->
+{% extends "base.html" %}
+
+{% block title %}Home - Dublin Fitness Companion{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="mb-4">Welcome to DublinFitAI</h1>
+        <p class="lead">Your intelligent companion for outdoor fitness in Dublin</p>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Real-time Environmental Data</h5>
+                        <p class="card-text">
+                            Access live air quality, noise levels, and weather data
+                            for optimal workout planning.
+                        </p>
+                        <a href="{{ url_for('map_view') }}" class="btn btn-primary">
+                            View Interactive Map
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Personalized Recommendations</h5>
+                        <p class="card-text">
+                            Get AI-powered suggestions based on your fitness goals
+                            and environmental conditions.
+                        </p>
+                        <a href="{{ url_for('user_profile') }}" class="btn btn-success">
+                            Set Up Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+<!-- templates/sensor_test.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Sensor Data Tester</h2>
+    <form id="sensorForm">
+        <div class="mb-3">
+            <label class="form-label">Monitor Serial</label>
+            <input type="text" class="form-control" name="serial" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Data Type</label>
+            <select class="form-select" name="data_type">
+                <option value="air">Air Quality</option>
+                <option value="noise">Noise Levels</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Fetch Data</button>
+    </form>
+    
+    <div id="chartContainer" class="mt-4">
+        <canvas id="sensorChart"></canvas>
+    </div>
+    
+    <div id="dataSummary" class="mt-4"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.getElementById('sensorForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const response = await fetch(`/api/sensor-data?serial=${formData.get('serial')}&type=${formData.get('data_type')}`);
+    const data = await response.json();
+    
+    if (data.error) {
+        alert(data.error);
+        return;
+    }
+
+    // Update chart
+    const ctx = document.getElementById('sensorChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.labels,
+            datasets: [{
+                label: data.type === 'air' ? 'AQI' : 'Noise Level (dB)',
+                data: data.values,
+                borderColor: data.type === 'air' ? '#3e95cd' : '#8e5ea2',
+                fill: false
+            }]
+        }
+    });
+
+    // Update summary
+    document.getElementById('dataSummary').innerHTML = `
+        <h4>Summary</h4>
+        <p>Average: ${data.average.toFixed(1)}</p>
+        <p>Maximum: ${data.maximum.toFixed(1)}</p>
+        <p>Minimum: ${data.minimum.toFixed(1)}</p>
+    `;
+});
+</script>
+{% endblock %}
